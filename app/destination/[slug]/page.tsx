@@ -12,35 +12,35 @@ interface DestinationPageProps {
 }
 
 // 1. สร้าง Static Params สำหรับ Static Site Generation (SSG)
-// Next.js จะสร้างหน้าเหล่านี้ล่วงหน้าในระหว่างการ build (เร็วมากบน Vercel)
 export async function generateStaticParams() {
     return destinations.map(dest => ({
         slug: dest.slug,
     }));
 }
 
-// 2. Dynamic Metadata
+// 2. Dynamic Metadata (เป็น async function อยู่แล้ว)
 export async function generateMetadata({ params }: DestinationPageProps): Promise<Metadata> {
+    // การเรียกใช้ getDestinationBySlug(params.slug) ภายใน async function จะปลอดภัย
     const destination = getDestinationBySlug(params.slug);
 
     if (!destination) {
-        // ถ้าไม่พบข้อมูล แต่หน้านี้ไม่ควรเข้าถึงได้ถ้า generateStaticParams ทำงานถูกต้อง
-        return { title: 'ไม่พบสถานที่' };
+        return { title: 'ไม่พบสถานที่ | Unseen Thailand Explorer' };
     }
 
     return {
-        title: destination.name,
+        title: `${destination.name} | Unseen Thailand Explorer`,
         description: destination.shortDescription,
-        // สามารถเพิ่ม Open Graph, Twitter Card ได้ที่นี่
     };
 }
 
 // 3. Page Component
-export default function DestinationPage({ params }: DestinationPageProps) {
+// ✅ FIX CRITICAL ERROR: ต้องเพิ่ม keyword 'async' ที่นี่ เพื่อให้เข้าถึง params.slug ได้อย่างถูกต้อง
+export default async function DestinationPage({ params }: DestinationPageProps) {
+    // การเรียกใช้ getDestinationBySlug(params.slug) ใน async component จะแก้ไขปัญหา Promise ได้
     const destination = getDestinationBySlug(params.slug);
 
     if (!destination) {
-        // ใช้ Next.js notFound() เพื่อแสดงหน้า 404
+        // ใช้ Next.js notFound() เพื่อแสดงหน้า 404 (เฉพาะกรณีที่ slug ไม่มีใน generateStaticParams)
         notFound();
     }
 
@@ -53,7 +53,7 @@ export default function DestinationPage({ params }: DestinationPageProps) {
                     alt={destination.name}
                     fill
                     className="object-cover"
-                    priority // โหลดรูปภาพนี้ก่อนรูปอื่นๆ
+                    priority
                     sizes="100vw"
                 />
             </div>
@@ -73,13 +73,13 @@ export default function DestinationPage({ params }: DestinationPageProps) {
                 {destination.fullDescription}
             </p>
 
-            {/* ส่วนอื่นๆ เช่น แผนที่, ที่พักแนะนำ */}
+            {/* ส่วนอื่นๆ เช่น ข้อมูลเพิ่มเติม */}
             <section className="mt-12 pt-8 border-t border-gray-200">
                 <h2 className="text-2xl font-bold text-gray-800 mb-4">ข้อมูลเพิ่มเติม</h2>
                 <ul className="list-disc list-inside text-gray-600 space-y-2">
                     <li>เวลาที่เหมาะสมในการเยี่ยมชม: ตลอดปี</li>
-                    <li>กิจกรรมเด่น: ดำน้ำ, เดินป่า, พักผ่อนริมหาด</li>
-                    <li>วิธีเดินทาง: เครื่องบินไปยังสนามบินใกล้เคียงและต่อเรือ/รถ</li>
+                    <li>กิจกรรมเด่น: ชมวิวทะเลหมอก, ตั้งแคมป์, ถ่ายภาพ</li>
+                    <li>วิธีเดินทาง: รถยนต์ส่วนตัวหรือรถประจำทาง</li>
                 </ul>
             </section>
         </article>

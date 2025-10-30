@@ -7,7 +7,7 @@ export default function HomePage() {
     const featuredDestinations = destinations.slice(0, 3); // แสดง 3 แห่งเด่น
 
     return (
-        <div className="pt-8">
+        <div className="pt-1">
             {/* Hero Section */}
             <section className="bg-teal-700 text-white py-20 mb-12">
                 <div className="max-w-7xl mx-auto px-4 text-center">

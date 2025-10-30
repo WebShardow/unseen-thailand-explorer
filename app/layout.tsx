@@ -8,7 +8,7 @@ import { Footer } from '@/components/Footer';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-    title: 'ThaiGuideline | คู่มือแนะนำการท่องเที่ยวไทย',
+    title: 'Unseen Thailand Explorer | คู่มือแนะนำการท่องเที่ยวไทย',
     description: 'ค้นพบและสำรวจสถานที่ท่องเที่ยวที่สวยงามและน่าตื่นตาตื่นใจทั่วประเทศไทย',
 };
 
